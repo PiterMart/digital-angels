@@ -1,17 +1,27 @@
 "use client";
 import { useState, useRef } from "react";
-import Image from "next/image";
 import styles from "../styles/page.module.css";
+import Menu from "../components/Menu";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const videoRef = useRef(null);
 
+  const menuItems = [
+    { text: "Yes", href: "/transitioning" },
+    { text: "No", href: "/start" }
+  ];
+
   const handleVideoEnd = () => {
     // Add a small delay before showing the menu
     setTimeout(() => {
       setShowMenu(true);
-    }, 500); // 500ms delay
+    }, 5); // 500ms delay
+  };
+
+  const handleMenuSelect = (selectedItem) => {
+    // Handle menu selection if needed
+    window.location.href = selectedItem.href;
   };
 
   return (
@@ -23,14 +33,15 @@ export default function Home() {
             className={styles.video} 
             src="/videos/start.mp4" 
             autoPlay 
-            muted 
             onEnded={handleVideoEnd}
           />
           <div className={styles.content}>
-            <div className={`${styles.menu} ${showMenu ? styles.menuVisible : ''}`}>
-              <a href="/start">Yes</a>
-              <a href="/start">No</a>
-            </div>
+            {showMenu && (
+              <Menu 
+                menuItems={menuItems} 
+                onSelect={handleMenuSelect}
+              />
+            )}
           </div>
         </div>
       </main>

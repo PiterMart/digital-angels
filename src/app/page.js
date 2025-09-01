@@ -7,11 +7,11 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.container}>  
-          <video className={styles.video} src="/videos/360.mp4" autoPlay loop muted />
+          <video className={styles.video} src="/videos/introDA.mp4" autoPlay loop muted />
         <div className={styles.content}>
         <p className={styles.title}>DG-tal 4ngel</p>
-            <div className={styles.menu}>
-              <a href="/start">Start Journey</a>
+            <div className={styles.menu} style={{opacity: 1, justifyContent: 'center'}}>
+              <a href="/start">Start</a>
             </div>
           </div>
         </div>

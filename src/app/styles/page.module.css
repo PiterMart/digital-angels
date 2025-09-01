@@ -23,13 +23,17 @@
 .menu a{
     font-size: 1.5rem;
     font-weight: bold;
-    color: #7d0f0f;
+    color: #ffffff;
     text-decoration: none;
     text-align: center;
 }
 .menu a:hover{
-    text-shadow: 0 0 10px #ff0000;
+    text-shadow: 0 0 10px #ffffff;
 
+}
+
+.menu a.selected{
+    text-shadow: 0 0 10px #ffffff;
 }
 
 .menu{
@@ -37,7 +41,7 @@
     flex-direction: row;
     justify-content: space-between;
     margin: auto;;
-    width: 380px;
+    width: 330px;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
@@ -46,6 +50,21 @@
 .menuVisible {
     opacity: 1;
     transform: translateY(0);
+}
+
+.menuItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.selectionIndicator {
+    filter: drop-shadow(0 0 5px rgb(255, 255, 255));
+    position: absolute;
+    top: 271%;
+    left: -110px;
+    transform: translateY(-50%);
 }
 
 .video{
