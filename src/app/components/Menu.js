@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import styles from "../styles/page.module.css";
 
@@ -37,7 +37,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
   const inputCooldown = 150; // milliseconds between navigation inputs
   const buttonCooldown = 300; // milliseconds between button presses
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback((event) => {
     switch (event.key) {
       case "ArrowLeft":
         if (layout !== "vertical") {
@@ -66,9 +66,10 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       default:
         break;
     }
-  };
+  }, [layout, menuItems.length, handleSelect]);
 
-  const handleSelect = () => {
+  const handleSelect = useCallback(() => {
+    console.log("handleSelect called, selectedIndex:", selectedIndex, "menuItem:", menuItems[selectedIndex]);
     // Call the onSelect callback with the selected item
     if (onSelect) {
       onSelect(menuItems[selectedIndex]);
@@ -76,7 +77,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       // Fallback to direct navigation if no callback provided
       window.location.href = menuItems[selectedIndex].href;
     }
-  };
+  }, [onSelect, menuItems, selectedIndex]);
 
   const handleMenuItemClick = (index) => {
     setSelectedIndex(index);
@@ -121,6 +122,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
 
     // Handle button presses for selection (separate from navigation)
     if (anyButtonPressed && currentTime - lastButtonTime.current > buttonCooldown) {
+      console.log("Gamepad button pressed, selectedIndex:", selectedIndex, "menuItem:", menuItems[selectedIndex]);
       handleSelect();
       lastButtonTime.current = currentTime;
       return; // Don't process navigation when selecting
@@ -182,7 +184,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       window.removeEventListener("gamepadconnected", handleGamepadConnect);
       window.removeEventListener("gamepaddisconnected", handleGamepadDisconnect);
     };
-  }, [selectedIndex, menuItems, onSelect, layout]);
+  }, [handleKeyDown]);
 
   const getMenuClassName = () => {
     const baseClass = `${styles.menu} ${styles.menuVisible}`;
