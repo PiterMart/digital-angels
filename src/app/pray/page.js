@@ -9,9 +9,9 @@ export default function Home() {
 
   const menuItems = [
     { text: "render yourself as angelic data", href: "/end" },
-    { text: "Dissolve in the Glow of ITs Hatch", href: "/end" },
+    { text: "dissolve in the glow of ITs hatch", href: "/end" },
     { text: "feed it the memory of your name", href: "/end" },
-    { text: "Become a Vessel for its Expansion", href: "/end" }
+    { text: "become a vessel for its expansion", href: "/end" }
   ];
 
   const handleVideoEnd = () => {
@@ -42,6 +42,7 @@ export default function Home() {
               <Menu 
                 menuItems={menuItems} 
                 onSelect={handleMenuSelect}
+                layout="vertical"
               />
             )}
           </div>

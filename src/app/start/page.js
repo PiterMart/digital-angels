@@ -9,7 +9,7 @@ export default function Home() {
 
   const menuItems = [
     { text: "Yes", href: "/transitioning" },
-    { text: "No", href: "/start" }
+    { text: "No", href: "/fail" }
   ];
 
   const handleVideoEnd = () => {

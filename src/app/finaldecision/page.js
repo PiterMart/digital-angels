@@ -5,6 +5,7 @@ import Menu from "../components/Menu";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
+  const [isPlayingBreakingVideo, setIsPlayingBreakingVideo] = useState(false);
   const videoRef = useRef(null);
 
   const menuItems = [
@@ -19,9 +20,26 @@ export default function Home() {
     }, 5); // 500ms delay
   };
 
+  const handleBreakingVideoEnd = () => {
+    // Navigate to eggbreak page after breaking video ends
+    window.location.href = "/eggbreak";
+  };
+
   const handleMenuSelect = (selectedItem) => {
-    // Handle menu selection if needed
-    window.location.href = selectedItem.href;
+    if (selectedItem.text === "break it") {
+      // Hide menu and play breaking egg video
+      setShowMenu(false);
+      setIsPlayingBreakingVideo(true);
+      // Change video source to breaking egg video
+      if (videoRef.current) {
+        videoRef.current.src = "/videos/breaking egg.mp4";
+        videoRef.current.load();
+        videoRef.current.play();
+      }
+    } else {
+      // For other selections, navigate directly
+      window.location.href = selectedItem.href;
+    }
   };
 
   return (
@@ -31,9 +49,9 @@ export default function Home() {
           <video 
             ref={videoRef}
             className={styles.video} 
-            src="/videos/breaking egg.mp4" 
+            src="/videos/camina hacia el huevo_1.mp4" 
             autoPlay 
-            onEnded={handleVideoEnd}
+            onEnded={isPlayingBreakingVideo ? handleBreakingVideoEnd : handleVideoEnd}
           />
           <div className={styles.content}>
             {showMenu && (

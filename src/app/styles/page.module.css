@@ -26,6 +26,14 @@
     color: #ffffff;
     text-decoration: none;
     text-align: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    padding: 10px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .menu a:hover{
     text-shadow: 0 0 10px #ffffff;
@@ -52,6 +60,40 @@
     transform: translateY(0);
 }
 
+.menuCentered {
+    justify-content: center !important;
+    width: auto !important;
+}
+
+.menuVertical {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: auto !important;
+    gap: 2rem !important;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.menuTop {
+    z-index: 100 !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    border-radius: 10px !important;
+    justify-content: center !important;
+    gap: 2rem !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 1rem 2rem !important;
+    position: fixed !important;
+    top: 13rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+.menuTop .selectionIndicator{
+    top: 136%;
+
+}
+
 .menuItem {
     position: relative;
     display: flex;
@@ -59,12 +101,34 @@
     gap: 10px;
 }
 
+.menuVertical .menuItem {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1rem;
+}
+
 .selectionIndicator {
     filter: drop-shadow(0 0 5px rgb(255, 255, 255));
     position: absolute;
-    top: 271%;
+    top: 191%;
     left: -110px;
     transform: translateY(-50%);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menuVertical .selectionIndicator {
+    margin-right: -7rem;
+    margin-left: -6rem;
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-top: -5rem;
+    margin-bottom: -6rem;
+    transform: none;
 }
 
 .video{

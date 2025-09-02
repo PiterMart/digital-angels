@@ -8,6 +8,7 @@ export default function Home() {
   const videoRef = useRef(null);
 
   const menuItems = [
+    { text: "retry", href: "/" },
 
   ];
 
@@ -30,7 +31,7 @@ export default function Home() {
           <video 
             ref={videoRef}
             className={styles.video} 
-            src="/videos/die.mp4"
+            src="/videos/die.mp4" 
             autoPlay 
             onEnded={handleVideoEnd}
           />

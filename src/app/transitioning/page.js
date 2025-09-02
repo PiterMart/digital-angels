@@ -9,7 +9,7 @@ export default function Home() {
 
   const menuItems = [
     { text: " Sounds Amazing!", href: "/rusure" },
-    { text: "Can i leave? :c", href: "/start" }
+    { text: "Can i leave? :c", href: "/fail" }
   ];
 
   const handleVideoEnd = () => {
@@ -40,6 +40,7 @@ export default function Home() {
               <Menu 
                 menuItems={menuItems} 
                 onSelect={handleMenuSelect}
+                layout="top"
               />
             )}
           </div>

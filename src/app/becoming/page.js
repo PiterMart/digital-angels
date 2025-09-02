@@ -8,8 +8,8 @@ export default function Home() {
   const videoRef = useRef(null);
 
   const menuItems = [
-    { text: "nvm", href: "/start" },
-    { text: "I want wings!!!", href: "/wings" }
+    { text: "nvm", href: "/fail" },
+    { text: "i want wings !!!", href: "/wings" }
   ];
 
   const handleVideoEnd = () => {
