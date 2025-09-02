@@ -9,7 +9,7 @@ export default function Home() {
 
   const menuItems = [
     { text: "nvm", href: "/fail" },
-    { text: "i want wings !!!", href: "/wings" }
+    { text: "i want wings", href: "/wings" }
   ];
 
   const handleVideoEnd = () => {

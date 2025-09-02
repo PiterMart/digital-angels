@@ -31,7 +31,7 @@ function AnimatedSelectIndicator({ onClick, className, style }) {
 export default function Menu({ menuItems, onSelect, layout = "default" }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [gamepad, setGamepad] = useState(null);
-  const [gamepadInput, setGamepadInput] = useState({ x: 0, y: 0, fire: false });
+  const [gamepadInput, setGamepadInput] = useState({ x: 0, y: 0, fire: false, buttons: [] });
   const lastInputTime = useRef(0);
   const inputCooldown = 200; // milliseconds between inputs to prevent rapid navigation
 
@@ -106,11 +106,15 @@ export default function Menu({ menuItems, onSelect, layout = "default" }) {
     const deadzone = 0.3; // Deadzone to prevent accidental navigation
     const currentTime = Date.now();
     
+    // Check if any button is pressed
+    const anyButtonPressed = gp.buttons.some(button => button.pressed);
+    
     // Update gamepad input state
     setGamepadInput({
       x: gp.axes[0].toFixed(2),
       y: gp.axes[1].toFixed(2),
-      fire: gp.buttons[0].pressed,
+      fire: anyButtonPressed,
+      buttons: gp.buttons.map((button, index) => ({ index, pressed: button.pressed, value: button.value }))
     });
 
     // Check if enough time has passed since last input
@@ -148,8 +152,8 @@ export default function Menu({ menuItems, onSelect, layout = "default" }) {
       }
     }
 
-    // Handle fire button
-    if (gp.buttons[0].pressed) {
+    // Handle any button press for selection
+    if (anyButtonPressed) {
       handleSelect();
       lastInputTime.current = currentTime;
     }
@@ -207,7 +211,15 @@ export default function Menu({ menuItems, onSelect, layout = "default" }) {
           <div>Atari Controller Connected</div>
           <div>X: {gamepadInput.x}</div>
           <div>Y: {gamepadInput.y}</div>
-          <div>Fire: {gamepadInput.fire ? "🔥" : "○"}</div>
+          <div>Any Button: {gamepadInput.fire ? "🔥" : "○"}</div>
+          <div style={{ marginTop: '5px' }}>
+            Buttons:
+            {gamepadInput.buttons.map((button, index) => (
+              <div key={index} style={{ marginLeft: '10px' }}>
+                B{button.index}: {button.pressed ? "🔥" : "○"} ({button.value.toFixed(2)})
+              </div>
+            ))}
+          </div>
         </div>
       )}
       
