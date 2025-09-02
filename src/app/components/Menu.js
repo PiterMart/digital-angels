@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "../styles/page.module.css";
 
@@ -37,39 +37,21 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
   const inputCooldown = 150; // milliseconds between navigation inputs
   const buttonCooldown = 300; // milliseconds between button presses
 
-  const handleKeyDown = useCallback((event) => {
-    switch (event.key) {
-      case "ArrowLeft":
-        if (layout !== "vertical") {
-          setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
-        }
-        break;
-      case "ArrowRight":
-        if (layout !== "vertical") {
-          setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
-        }
-        break;
-      case "ArrowUp":
-        if (layout === "vertical") {
-          setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
-        }
-        break;
-      case "ArrowDown":
-        if (layout === "vertical") {
-          setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
-        }
-        break;
-      case "Enter":
-      case " ":
-        handleSelect();
-        break;
-      default:
-        break;
-    }
-  }, [layout, menuItems.length, handleSelect]);
+  const handleMenuItemClick = (index) => {
+    setSelectedIndex(index);
+    // Small delay to allow visual feedback before selection
+    setTimeout(() => {
+      // Call the onSelect callback with the selected item
+      if (onSelect) {
+        onSelect(menuItems[index]);
+      } else {
+        // Fallback to direct navigation if no callback provided
+        window.location.href = menuItems[index].href;
+      }
+    }, 100);
+  };
 
-  const handleSelect = useCallback(() => {
-    console.log("handleSelect called, selectedIndex:", selectedIndex, "menuItem:", menuItems[selectedIndex]);
+  const handleSelectionIndicatorClick = () => {
     // Call the onSelect callback with the selected item
     if (onSelect) {
       onSelect(menuItems[selectedIndex]);
@@ -77,94 +59,122 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       // Fallback to direct navigation if no callback provided
       window.location.href = menuItems[selectedIndex].href;
     }
-  }, [onSelect, menuItems, selectedIndex]);
-
-  const handleMenuItemClick = (index) => {
-    setSelectedIndex(index);
-    // Small delay to allow visual feedback before selection
-    setTimeout(() => {
-      handleSelect();
-    }, 100);
-  };
-
-  const handleSelectionIndicatorClick = () => {
-    handleSelect();
-  };
-
-  // Gamepad handling functions
-  const handleGamepadConnect = (e) => {
-    console.log("Atari controller connected:", e.gamepad);
-    setGamepad(e.gamepad);
-  };
-
-  const handleGamepadDisconnect = () => {
-    console.log("Atari controller disconnected");
-    setGamepad(null);
-  };
-
-  const processGamepadInput = () => {
-    const gp = navigator.getGamepads()[0];
-    if (!gp) return;
-
-    const deadzone = 0.5; // Increased deadzone for more reliable navigation
-    const currentTime = Date.now();
-    
-    // Check for any button press (any button can be used for selection)
-    const anyButtonPressed = gp.buttons.some(button => button.pressed);
-    
-    // Update gamepad input state
-    setGamepadInput({
-      x: gp.axes[0].toFixed(2),
-      y: gp.axes[1].toFixed(2),
-      fire: anyButtonPressed,
-      buttons: gp.buttons.map((button, index) => ({ index, pressed: button.pressed, value: button.value }))
-    });
-
-    // Handle button presses for selection (separate from navigation)
-    if (anyButtonPressed && currentTime - lastButtonTime.current > buttonCooldown) {
-      console.log("Gamepad button pressed, selectedIndex:", selectedIndex, "menuItem:", menuItems[selectedIndex]);
-      handleSelect();
-      lastButtonTime.current = currentTime;
-      return; // Don't process navigation when selecting
-    }
-
-    // Check if enough time has passed since last navigation input
-    if (currentTime - lastInputTime.current < inputCooldown) {
-      return;
-    }
-
-    // Handle joystick navigation
-    const xAxis = gp.axes[0];
-    const yAxis = gp.axes[1];
-
-    // Horizontal navigation (left/right)
-    if (Math.abs(xAxis) > deadzone && layout !== "vertical") {
-      if (xAxis < -deadzone) {
-        // Left
-        setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
-        lastInputTime.current = currentTime;
-      } else if (xAxis > deadzone) {
-        // Right
-        setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
-        lastInputTime.current = currentTime;
-      }
-    }
-
-    // Vertical navigation (up/down)
-    if (Math.abs(yAxis) > deadzone && layout === "vertical") {
-      if (yAxis < -deadzone) {
-        // Up
-        setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
-        lastInputTime.current = currentTime;
-      } else if (yAxis > deadzone) {
-        // Down
-        setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
-        lastInputTime.current = currentTime;
-      }
-    }
   };
 
   useEffect(() => {
+    const handleSelect = () => {
+      // Call the onSelect callback with the selected item
+      if (onSelect) {
+        onSelect(menuItems[selectedIndex]);
+      } else {
+        // Fallback to direct navigation if no callback provided
+        window.location.href = menuItems[selectedIndex].href;
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      switch (event.key) {
+        case "ArrowLeft":
+          if (layout !== "vertical") {
+            setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+          }
+          break;
+        case "ArrowRight":
+          if (layout !== "vertical") {
+            setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+          }
+          break;
+        case "ArrowUp":
+          if (layout === "vertical") {
+            setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+          }
+          break;
+        case "ArrowDown":
+          if (layout === "vertical") {
+            setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+          }
+          break;
+        case "Enter":
+        case " ":
+          handleSelect();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Gamepad handling functions
+    const handleGamepadConnect = (e) => {
+      console.log("Atari controller connected:", e.gamepad);
+      setGamepad(e.gamepad);
+    };
+
+    const handleGamepadDisconnect = () => {
+      console.log("Atari controller disconnected");
+      setGamepad(null);
+    };
+
+    const processGamepadInput = () => {
+      const gp = navigator.getGamepads()[0];
+      if (!gp) return;
+
+      const deadzone = 0.5; // Increased deadzone for more reliable navigation
+      const currentTime = Date.now();
+      
+      // Check for any button press (any button can be used for selection)
+      const anyButtonPressed = gp.buttons.some(button => button.pressed);
+      
+      // Update gamepad input state
+      setGamepadInput({
+        x: gp.axes[0].toFixed(2),
+        y: gp.axes[1].toFixed(2),
+        fire: anyButtonPressed,
+        buttons: gp.buttons.map((button, index) => ({ index, pressed: button.pressed, value: button.value }))
+      });
+
+      // Handle button presses for selection (separate from navigation)
+      if (anyButtonPressed && currentTime - lastButtonTime.current > buttonCooldown) {
+        handleSelect();
+        lastButtonTime.current = currentTime;
+        return; // Don't process navigation when selecting
+      }
+
+      // Check if enough time has passed since last navigation input
+      if (currentTime - lastInputTime.current < inputCooldown) {
+        return;
+      }
+
+      // Handle joystick navigation
+      const xAxis = gp.axes[0];
+      const yAxis = gp.axes[1];
+
+      // Horizontal navigation (left/right)
+      if (Math.abs(xAxis) > deadzone && layout !== "vertical") {
+        if (xAxis < -deadzone) {
+          // Left
+          setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+          lastInputTime.current = currentTime;
+        } else if (xAxis > deadzone) {
+          // Right
+          setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+          lastInputTime.current = currentTime;
+        }
+      }
+
+      // Vertical navigation (up/down)
+      if (Math.abs(yAxis) > deadzone && layout === "vertical") {
+        if (yAxis < -deadzone) {
+          // Up
+          setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+          lastInputTime.current = currentTime;
+        } else if (yAxis > deadzone) {
+          // Down
+          setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+          lastInputTime.current = currentTime;
+        }
+      }
+    };
+
     // Keyboard event listeners
     window.addEventListener("keydown", handleKeyDown);
     
@@ -184,7 +194,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       window.removeEventListener("gamepadconnected", handleGamepadConnect);
       window.removeEventListener("gamepaddisconnected", handleGamepadDisconnect);
     };
-  }, [handleKeyDown]);
+  }, [layout, menuItems, onSelect, selectedIndex]);
 
   const getMenuClassName = () => {
     const baseClass = `${styles.menu} ${styles.menuVisible}`;
