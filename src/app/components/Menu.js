@@ -32,8 +32,12 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
   const [selectedIndex, setSelectedIndex] = useState(defaultSelectedIndex);
   const [gamepad, setGamepad] = useState(null);
   const [gamepadInput, setGamepadInput] = useState({ x: 0, y: 0, fire: false, buttons: [] });
+  const [isControllerActive, setIsControllerActive] = useState(false);
   const lastInputTime = useRef(0);
-  const inputCooldown = 200; // milliseconds between inputs to prevent rapid navigation
+  const lastButtonTime = useRef(0);
+  const controllerActivityTimeout = useRef(null);
+  const inputCooldown = 150; // milliseconds between navigation inputs
+  const buttonCooldown = 300; // milliseconds between button presses
 
   const handleKeyDown = (event) => {
     switch (event.key) {
@@ -103,10 +107,12 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
     const gp = navigator.getGamepads()[0];
     if (!gp) return;
 
-    const deadzone = 0.3; // Deadzone to prevent accidental navigation
+    const deadzone = 0.5; // Increased deadzone for more reliable navigation
     const currentTime = Date.now();
     
-    // Check if any button is pressed
+    // Check for specific buttons (typically button 0 is A/Select, button 1 is B/Cancel)
+    const selectButtonPressed = gp.buttons[0] && gp.buttons[0].pressed;
+    const cancelButtonPressed = gp.buttons[1] && gp.buttons[1].pressed;
     const anyButtonPressed = gp.buttons.some(button => button.pressed);
     
     // Update gamepad input state
@@ -117,7 +123,29 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       buttons: gp.buttons.map((button, index) => ({ index, pressed: button.pressed, value: button.value }))
     });
 
-    // Check if enough time has passed since last input
+    // Check for any controller activity
+    const hasActivity = anyButtonPressed || Math.abs(gp.axes[0]) > deadzone || Math.abs(gp.axes[1]) > deadzone;
+    
+    if (hasActivity) {
+      setIsControllerActive(true);
+      // Clear any existing timeout
+      if (controllerActivityTimeout.current) {
+        clearTimeout(controllerActivityTimeout.current);
+      }
+      // Set timeout to hide controller indicator after 2 seconds of inactivity
+      controllerActivityTimeout.current = setTimeout(() => {
+        setIsControllerActive(false);
+      }, 2000);
+    }
+
+    // Handle button presses for selection (separate from navigation)
+    if (selectButtonPressed && currentTime - lastButtonTime.current > buttonCooldown) {
+      handleSelect();
+      lastButtonTime.current = currentTime;
+      return; // Don't process navigation when selecting
+    }
+
+    // Check if enough time has passed since last navigation input
     if (currentTime - lastInputTime.current < inputCooldown) {
       return;
     }
@@ -151,12 +179,6 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
         lastInputTime.current = currentTime;
       }
     }
-
-    // Handle any button press for selection
-    if (anyButtonPressed) {
-      handleSelect();
-      lastInputTime.current = currentTime;
-    }
   };
 
   useEffect(() => {
@@ -178,6 +200,10 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("gamepadconnected", handleGamepadConnect);
       window.removeEventListener("gamepaddisconnected", handleGamepadDisconnect);
+      // Clean up controller activity timeout
+      if (controllerActivityTimeout.current) {
+        clearTimeout(controllerActivityTimeout.current);
+      }
     };
   }, [selectedIndex, menuItems, onSelect, layout]);
 
@@ -195,6 +221,25 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
 
   return (
     <div>
+      {/* Controller indicator */}
+      {gamepad && isControllerActive && (
+        <div style={{ 
+          position: 'fixed', 
+          top: '20px', 
+          left: '20px', 
+          background: 'rgba(0,255,0,0.8)', 
+          color: 'black', 
+          padding: '8px 12px', 
+          borderRadius: '20px',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          zIndex: 1000,
+          animation: 'pulse 1s infinite'
+        }}>
+          🎮 Controller Active
+        </div>
+      )}
+
       {/* Optional debug display for gamepad input - remove in production */}
       {process.env.NODE_ENV === 'development' && gamepad && (
         <div style={{ 
@@ -211,9 +256,10 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           <div>Atari Controller Connected</div>
           <div>X: {gamepadInput.x}</div>
           <div>Y: {gamepadInput.y}</div>
-          <div>Any Button: {gamepadInput.fire ? "🔥" : "○"}</div>
+          <div>Select (B0): {gamepadInput.buttons[0]?.pressed ? "🔥" : "○"}</div>
+          <div>Cancel (B1): {gamepadInput.buttons[1]?.pressed ? "🔥" : "○"}</div>
           <div style={{ marginTop: '5px' }}>
-            Buttons:
+            All Buttons:
             {gamepadInput.buttons.map((button, index) => (
               <div key={index} style={{ marginLeft: '10px' }}>
                 B{button.index}: {button.pressed ? "🔥" : "○"} ({button.value.toFixed(2)})
