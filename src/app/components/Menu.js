@@ -34,11 +34,13 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
   const [gamepadInput, setGamepadInput] = useState({ x: 0, y: 0, fire: false, buttons: [] });
   const lastInputTime = useRef(0);
   const lastButtonTime = useRef(0);
+  const selectedIndexRef = useRef(defaultSelectedIndex);
   const inputCooldown = 150; // milliseconds between navigation inputs
   const buttonCooldown = 300; // milliseconds between button presses
 
   const handleMenuItemClick = (index) => {
     setSelectedIndex(index);
+    selectedIndexRef.current = index;
     // Small delay to allow visual feedback before selection
     setTimeout(() => {
       // Call the onSelect callback with the selected item
@@ -54,10 +56,10 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
   const handleSelectionIndicatorClick = () => {
     // Call the onSelect callback with the selected item
     if (onSelect) {
-      onSelect(menuItems[selectedIndex]);
+      onSelect(menuItems[selectedIndexRef.current]);
     } else {
       // Fallback to direct navigation if no callback provided
-      window.location.href = menuItems[selectedIndex].href;
+      window.location.href = menuItems[selectedIndexRef.current].href;
     }
   };
 
@@ -65,10 +67,10 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
     const handleSelect = () => {
       // Call the onSelect callback with the selected item
       if (onSelect) {
-        onSelect(menuItems[selectedIndex]);
+        onSelect(menuItems[selectedIndexRef.current]);
       } else {
         // Fallback to direct navigation if no callback provided
-        window.location.href = menuItems[selectedIndex].href;
+        window.location.href = menuItems[selectedIndexRef.current].href;
       }
     };
 
@@ -76,22 +78,38 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       switch (event.key) {
         case "ArrowLeft":
           if (layout !== "vertical") {
-            setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+            setSelectedIndex(prev => {
+              const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
+              selectedIndexRef.current = newIndex;
+              return newIndex;
+            });
           }
           break;
         case "ArrowRight":
           if (layout !== "vertical") {
-            setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+            setSelectedIndex(prev => {
+              const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
+              selectedIndexRef.current = newIndex;
+              return newIndex;
+            });
           }
           break;
         case "ArrowUp":
           if (layout === "vertical") {
-            setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+            setSelectedIndex(prev => {
+              const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
+              selectedIndexRef.current = newIndex;
+              return newIndex;
+            });
           }
           break;
         case "ArrowDown":
           if (layout === "vertical") {
-            setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+            setSelectedIndex(prev => {
+              const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
+              selectedIndexRef.current = newIndex;
+              return newIndex;
+            });
           }
           break;
         case "Enter":
@@ -152,11 +170,19 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       if (Math.abs(xAxis) > deadzone && layout !== "vertical") {
         if (xAxis < -deadzone) {
           // Left
-          setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+          setSelectedIndex(prev => {
+            const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
+            selectedIndexRef.current = newIndex;
+            return newIndex;
+          });
           lastInputTime.current = currentTime;
         } else if (xAxis > deadzone) {
           // Right
-          setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+          setSelectedIndex(prev => {
+            const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
+            selectedIndexRef.current = newIndex;
+            return newIndex;
+          });
           lastInputTime.current = currentTime;
         }
       }
@@ -165,11 +191,19 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       if (Math.abs(yAxis) > deadzone && layout === "vertical") {
         if (yAxis < -deadzone) {
           // Up
-          setSelectedIndex(prev => prev === 0 ? menuItems.length - 1 : prev - 1);
+          setSelectedIndex(prev => {
+            const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
+            selectedIndexRef.current = newIndex;
+            return newIndex;
+          });
           lastInputTime.current = currentTime;
         } else if (yAxis > deadzone) {
           // Down
-          setSelectedIndex(prev => prev === menuItems.length - 1 ? 0 : prev + 1);
+          setSelectedIndex(prev => {
+            const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
+            selectedIndexRef.current = newIndex;
+            return newIndex;
+          });
           lastInputTime.current = currentTime;
         }
       }
@@ -194,7 +228,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       window.removeEventListener("gamepadconnected", handleGamepadConnect);
       window.removeEventListener("gamepaddisconnected", handleGamepadDisconnect);
     };
-  }, [layout, menuItems, onSelect, selectedIndex]);
+  }, [layout, menuItems, onSelect]);
 
   const getMenuClassName = () => {
     const baseClass = `${styles.menu} ${styles.menuVisible}`;
