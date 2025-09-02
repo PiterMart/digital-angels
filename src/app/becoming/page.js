@@ -40,6 +40,7 @@ export default function Home() {
               <Menu 
                 menuItems={menuItems} 
                 onSelect={handleMenuSelect}
+                defaultSelectedIndex={1}
               />
             )}
           </div>

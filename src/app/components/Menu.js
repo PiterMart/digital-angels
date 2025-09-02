@@ -28,8 +28,8 @@ function AnimatedSelectIndicator({ onClick, className, style }) {
   );
 }
 
-export default function Menu({ menuItems, onSelect, layout = "default" }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+export default function Menu({ menuItems, onSelect, layout = "default", defaultSelectedIndex = 0 }) {
+  const [selectedIndex, setSelectedIndex] = useState(defaultSelectedIndex);
   const [gamepad, setGamepad] = useState(null);
   const [gamepadInput, setGamepadInput] = useState({ x: 0, y: 0, fire: false, buttons: [] });
   const lastInputTime = useRef(0);
