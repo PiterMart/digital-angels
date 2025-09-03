@@ -8,8 +8,8 @@ export default function Home() {
   const videoRef = useRef(null);
 
   const menuItems = [
-    { text: " Sounds Amazing!", href: "/rusure" },
-    { text: "Can i leave? :c", href: "/fail" }
+    { text: " sounds amazing!", href: "/rusure" },
+    { text: "can i leave? :c", href: "/fail" }
   ];
 
   const handleVideoEnd = () => {
