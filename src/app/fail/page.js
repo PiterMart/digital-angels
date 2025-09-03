@@ -31,7 +31,7 @@ export default function Home() {
           <video 
             ref={videoRef}
             className={styles.video} 
-            src="/videos/die.mp4" 
+            src="/videos/dead_1.mp4" 
             autoPlay 
             onEnded={handleVideoEnd}
           />

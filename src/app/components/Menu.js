@@ -19,8 +19,8 @@ function AnimatedSelectIndicator({ onClick, className, style }) {
     <Image
       src={`/l0_sprite_${currentFrame}.png`}
       alt="Selection indicator"
-      width={270}
-      height={270}
+      width={350}
+      height={350}
       className={className}
       onClick={onClick}
       style={style}

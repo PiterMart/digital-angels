@@ -6,6 +6,7 @@ import Menu from "../components/Menu";
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const [isPlayingBreakingVideo, setIsPlayingBreakingVideo] = useState(false);
+  const [isPlayingPrayingVideo, setIsPlayingPrayingVideo] = useState(false);
   const videoRef = useRef(null);
 
   const menuItems = [
@@ -25,6 +26,11 @@ export default function Home() {
     window.location.href = "/eggbreak";
   };
 
+  const handlePrayingVideoEnd = () => {
+    // Navigate to pray page after praying video ends
+    window.location.href = "/pray";
+  };
+
   const handleMenuSelect = (selectedItem) => {
     if (selectedItem.text === "break it") {
       // Hide menu and play breaking egg video
@@ -33,6 +39,16 @@ export default function Home() {
       // Change video source to breaking egg video
       if (videoRef.current) {
         videoRef.current.src = "/videos/breaking egg.mp4";
+        videoRef.current.load();
+        videoRef.current.play();
+      }
+    } else if (selectedItem.text === "pray") {
+      // Hide menu and play praying video
+      setShowMenu(false);
+      setIsPlayingPrayingVideo(true);
+      // Change video source to praying video
+      if (videoRef.current) {
+        videoRef.current.src = "/videos/va a rezar_1.mp4";
         videoRef.current.load();
         videoRef.current.play();
       }
@@ -51,7 +67,7 @@ export default function Home() {
             className={styles.video} 
             src="/videos/camina hacia el huevo_1.mp4" 
             autoPlay 
-            onEnded={isPlayingBreakingVideo ? handleBreakingVideoEnd : handleVideoEnd}
+            onEnded={isPlayingBreakingVideo ? handleBreakingVideoEnd : isPlayingPrayingVideo ? handlePrayingVideoEnd : handleVideoEnd}
           />
           <div className={styles.content}>
             {showMenu && (

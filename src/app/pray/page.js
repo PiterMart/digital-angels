@@ -9,7 +9,7 @@ export default function Home() {
 
   const menuItems = [
     { text: "render yourself as angelic data", href: "/end" },
-    { text: "dissolve in the glow of ITs hatch", href: "/end" },
+    { text: "dissolve in the glow of its hatch", href: "/end" },
     { text: "feed it the memory of your name", href: "/end" },
     { text: "become a vessel for its expansion", href: "/end" }
   ];

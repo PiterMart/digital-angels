@@ -8,7 +8,7 @@ export default function Home() {
   const audioRef = useRef(null);
 
   const menuItems = [
-    { text: "Start", href: "/start" }
+    { text: "contact angel", href: "/start" }
   ];
 
   useEffect(() => {
