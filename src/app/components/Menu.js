@@ -3,6 +3,23 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "../styles/page.module.css";
 
+// Sound utility functions
+const playMoveSound = () => {
+  const audio = new Audio('/move.mp3');
+  audio.volume = 0.4;
+  audio.play().catch(error => {
+    console.log("Move sound play failed:", error);
+  });
+};
+
+const playSelectSound = () => {
+  const audio = new Audio('/select.mp3');
+  audio.volume = 0.4;
+  audio.play().catch(error => {
+    console.log("Select sound play failed:", error);
+  });
+};
+
 // Animated Select Indicator Component
 function AnimatedSelectIndicator({ onClick, className, style }) {
   const [currentFrame, setCurrentFrame] = useState(1);
@@ -78,6 +95,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       switch (event.key) {
         case "ArrowLeft":
           if (layout !== "vertical") {
+            playMoveSound();
             setSelectedIndex(prev => {
               const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
               selectedIndexRef.current = newIndex;
@@ -87,6 +105,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           break;
         case "ArrowRight":
           if (layout !== "vertical") {
+            playMoveSound();
             setSelectedIndex(prev => {
               const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
               selectedIndexRef.current = newIndex;
@@ -96,6 +115,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           break;
         case "ArrowUp":
           if (layout === "vertical") {
+            playMoveSound();
             setSelectedIndex(prev => {
               const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
               selectedIndexRef.current = newIndex;
@@ -105,6 +125,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           break;
         case "ArrowDown":
           if (layout === "vertical") {
+            playMoveSound();
             setSelectedIndex(prev => {
               const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
               selectedIndexRef.current = newIndex;
@@ -114,6 +135,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           break;
         case "Enter":
         case " ":
+          playSelectSound();
           handleSelect();
           break;
         default:
@@ -152,6 +174,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
 
       // Handle button presses for selection (separate from navigation)
       if (anyButtonPressed && currentTime - lastButtonTime.current > buttonCooldown) {
+        playSelectSound();
         handleSelect();
         lastButtonTime.current = currentTime;
         return; // Don't process navigation when selecting
@@ -170,6 +193,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       if (Math.abs(xAxis) > deadzone && layout !== "vertical") {
         if (xAxis < -deadzone) {
           // Left
+          playMoveSound();
           setSelectedIndex(prev => {
             const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
             selectedIndexRef.current = newIndex;
@@ -178,6 +202,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           lastInputTime.current = currentTime;
         } else if (xAxis > deadzone) {
           // Right
+          playMoveSound();
           setSelectedIndex(prev => {
             const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
             selectedIndexRef.current = newIndex;
@@ -191,6 +216,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       if (Math.abs(yAxis) > deadzone && layout === "vertical") {
         if (yAxis < -deadzone) {
           // Up
+          playMoveSound();
           setSelectedIndex(prev => {
             const newIndex = prev === 0 ? menuItems.length - 1 : prev - 1;
             selectedIndexRef.current = newIndex;
@@ -199,6 +225,7 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
           lastInputTime.current = currentTime;
         } else if (yAxis > deadzone) {
           // Down
+          playMoveSound();
           setSelectedIndex(prev => {
             const newIndex = prev === menuItems.length - 1 ? 0 : prev + 1;
             selectedIndexRef.current = newIndex;
@@ -238,6 +265,8 @@ export default function Menu({ menuItems, onSelect, layout = "default", defaultS
       return `${baseClass} ${styles.menuVertical}`;
     } else if (layout === "top") {
       return `${baseClass} ${styles.menuTop}`;
+    } else if (layout === "egg") {
+      return `${baseClass} ${styles.menuEgg}`;
     }
     return baseClass;
   };

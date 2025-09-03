@@ -48,7 +48,8 @@
     flex-direction: row;
     justify-content: space-between;
     margin: auto;;
-    width: 85vw;
+    width: 62vw;
+    margin-top: 46rem;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
@@ -62,13 +63,24 @@
 .menuCentered {
     justify-content: center !important;
     width: auto !important;
+    margin-top: 0rem;
+}
+.menuCentered a{
+    font-style: italic;
+    font-size: 6rem;
+    margin-top: 12rem;
+    max-width: 800px;
+}
+.menuCentered .selectionIndicator{
+    top: 26%;
+    left: 231px;
 }
 
 .menuVertical {
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    width: auto !important;
+    width: 61vw;
     gap: 2rem !important;
     padding-right: 1rem;
     padding-left: 1rem;
@@ -77,21 +89,29 @@
 .menuTop {
     z-index: 100 !important;
     -webkit-backdrop-filter: blur(5px) !important;
-    border-radius: 10px !important;
+    /* border-radius: 10px !important; */
     justify-content: center !important;
-    gap: 2rem !important;
-    width: auto !important;
+    gap: 6rem !important;
+    width: 138%;
     margin: 0 !important;
     padding: 1rem 2rem !important;
     position: fixed !important;
-    top: 13rem !important;
+    top: 43rem !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
 }
 .menuTop .selectionIndicator{
-    top: 136%;
+    top: 200%;
+    left: 68px
 
 }
+.menuEgg a{
+    color: black
+}
+.menuEgg .menuItem{
+    color: black;
+}
+
 
 .menuItem {
     position: relative;
@@ -112,7 +132,7 @@
     filter: drop-shadow(0 0 5px rgb(255, 255, 255));
     position: absolute;
     top: 185%;
-    left: -50px;
+    left: -119px;
     transform: translateY(-50%);
     cursor: pointer;
     touch-action: manipulation;

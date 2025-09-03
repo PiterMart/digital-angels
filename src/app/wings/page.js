@@ -8,8 +8,8 @@ export default function Home() {
   const videoRef = useRef(null);
 
   const menuItems = [
-    { text: "its getting cold out here...", href: "/fail" },
-    { text: "i need to ask my egg", href: "/finaldecision" }
+    { text: "i need to ask my egg", href: "/finaldecision" },
+    { text: "its getting cold out here...", href: "/fail" }
   ];
 
   const handleVideoEnd = () => {
@@ -40,6 +40,7 @@ export default function Home() {
               <Menu 
                 menuItems={menuItems} 
                 onSelect={handleMenuSelect}
+                layout="vertical"
               />
             )}
           </div>

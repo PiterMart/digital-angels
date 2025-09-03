@@ -1,8 +1,15 @@
 @font-face {
-  font-family: 'FT88-Serif';
+  font-family: 'FT88';
   src: url('/fonts/FT88-Serif.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FT88';
+  src: url('/fonts/FT88-Gothique.otf') format('opentype');
+  font-weight: bold;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -27,9 +34,10 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'FT88-Serif', Arial, Helvetica, sans-serif;
+  font-family: 'FT88', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-weight: normal;
 }
 
 * {

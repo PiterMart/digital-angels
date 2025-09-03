@@ -74,6 +74,7 @@ export default function Home() {
               <Menu 
                 menuItems={menuItems} 
                 onSelect={handleMenuSelect}
+                layout="egg"
               />
             )}
           </div>
