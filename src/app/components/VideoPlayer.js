@@ -76,9 +76,17 @@ export default function VideoPlayer({
         alignItems: 'center', 
         justifyContent: 'center',
         color: '#fff',
-        fontSize: '1.5rem'
+        fontSize: '1.5rem',
+        fontFamily: 'Arial, Helvetica, sans-serif',
+        textAlign: 'center',
+        padding: '20px'
       }}>
-        Video unavailable - continuing...
+        <div>
+          <div>Video unavailable</div>
+          <div style={{ fontSize: '1rem', marginTop: '10px', opacity: 0.7 }}>
+            Continuing automatically...
+          </div>
+        </div>
       </div>
     );
   }
@@ -99,3 +107,4 @@ export default function VideoPlayer({
     />
   );
 }
+

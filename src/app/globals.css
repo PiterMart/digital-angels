@@ -3,14 +3,24 @@
   src: url('/fonts/FT88-Serif.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block; /* Changed from swap to block for better reliability */
+  font-display: fallback; /* Fallback for browsers that don't support block */
 }
 @font-face {
   font-family: 'FT88';
   src: url('/fonts/FT88-Gothique.otf') format('opentype');
   font-weight: bold;
   font-style: italic;
-  font-display: swap;
+  font-display: block; /* Changed from swap to block for better reliability */
+  font-display: fallback; /* Fallback for browsers that don't support block */
+}
+
+/* Add system font fallbacks for better reliability */
+@font-face {
+  font-family: 'FT88-Fallback';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: normal;
+  font-style: normal;
 }
 
 :root {
@@ -34,10 +44,13 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'FT88', Arial, Helvetica, sans-serif;
+  font-family: 'FT88', 'FT88-Fallback', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: normal;
+  /* Ensure text is always visible even if fonts fail to load */
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 * {
@@ -55,4 +68,28 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+/* Font fallback styles for when custom fonts fail to load */
+.font-fallback {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.font-fallback .menu a {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: bold !important;
+}
+
+.font-fallback .menuCentered a {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: bold !important;
+  font-style: italic !important;
+}
+
+/* Ensure text is always visible */
+.menu a {
+  font-family: 'FT88', Arial, Helvetica, sans-serif !important;
+  /* Force text to be visible even if font loading fails */
+  color: #ffffff !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8) !important;
 }
