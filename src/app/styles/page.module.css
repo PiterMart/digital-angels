@@ -53,11 +53,18 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+    /* Add fallback for poor network conditions */
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .menuVisible {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    /* Force visibility even in poor network conditions */
+    visibility: visible !important;
+    display: flex !important;
 }
 
 .menuCentered {

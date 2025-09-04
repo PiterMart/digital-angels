@@ -13,10 +13,10 @@ export default function Home() {
   ];
 
   const handleVideoEnd = () => {
-    // Add a small delay before showing the menu
+    // Add a delay before showing the menu to ensure proper rendering
     setTimeout(() => {
       setShowMenu(true);
-    }, 5); // 500ms delay
+    }, 500); // 500ms delay for better reliability
   };
 
   const handleMenuSelect = (selectedItem) => {

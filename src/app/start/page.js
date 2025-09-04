@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
 import styles from "../styles/page.module.css";
-import Menu from "../components/Menu";
+import NetworkAwareMenu from "../components/NetworkAwareMenu";
+import VideoPlayer from "../components/VideoPlayer";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
@@ -13,10 +14,15 @@ export default function Home() {
   ];
 
   const handleVideoEnd = () => {
-    // Add a small delay before showing the menu
-    setTimeout(() => {
-      setShowMenu(true);
-    }, 5); // 500ms delay
+    // Trigger the network-aware menu display
+    if (window.showNetworkAwareMenu) {
+      window.showNetworkAwareMenu();
+    } else {
+      // Fallback to simple delay
+      setTimeout(() => {
+        setShowMenu(true);
+      }, 500);
+    }
   };
 
   const handleMenuSelect = (selectedItem) => {
@@ -28,20 +34,20 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.container}> 
-          <video 
+          <VideoPlayer 
             ref={videoRef}
             className={styles.video} 
             src="/videos/start.mp4" 
             autoPlay 
             onEnded={handleVideoEnd}
+            fallbackDelay={15000} // 15 seconds fallback for this video
           />
           <div className={styles.content}>
-            {showMenu && (
-              <Menu 
-                menuItems={menuItems} 
-                onSelect={handleMenuSelect}
-              />
-            )}
+            <NetworkAwareMenu 
+              menuItems={menuItems} 
+              onSelect={handleMenuSelect}
+              showDelay={500}
+            />
           </div>
         </div>
       </main>
