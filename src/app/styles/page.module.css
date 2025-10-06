@@ -6,6 +6,8 @@
     height: 100vh;
     width: 100vw;
     background-color: #000000;
+    position: relative;
+    overflow: hidden;
 }
 .title{
     font-size: 3rem;
@@ -13,15 +15,22 @@
     color: #ffffff;
 }
 .content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 2.5rem;
     text-align: center;
     z-index: 10;
-    margin-top: 30vh;
+    pointer-events: none;
 }
 .menu a{
-    font-size: 3.25rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #ffffff;
     text-decoration: none;
@@ -29,7 +38,7 @@
     cursor: pointer;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    padding: 10px;
+    padding: 0.5rem;
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -47,36 +56,33 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: auto;;
-    width: 62vw;
-    margin-top: 46rem;
+    margin: auto;
+    width: 80%;
+    max-width: 600px;
+    gap: 1rem;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
-    /* Add fallback for poor network conditions */
-    will-change: opacity, transform;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    pointer-events: auto;
 }
 
 .menuVisible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    /* Force visibility even in poor network conditions */
-    visibility: visible !important;
-    display: flex !important;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .menuCentered {
     justify-content: center !important;
     width: auto !important;
     margin-top: 0rem;
+    pointer-events: auto;
 }
 .menuCentered a{
     font-style: italic;
-    font-size: 6rem;
-    margin-top: 12rem;
-    max-width: 800px;
+    font-size: 2rem;
+    margin-top: 2rem;
+    max-width: 90%;
+    text-align: center;
 }
 .menuCentered .selectionIndicator{
     top: 26%;
@@ -87,10 +93,11 @@
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    width: 61vw;
-    gap: 2rem !important;
-    padding-right: 1rem;
-    padding-left: 1rem;
+    width: 80%;
+    max-width: 500px;
+    gap: 1.5rem !important;
+    padding: 1rem;
+    pointer-events: auto;
 }
 
 .menuTop {
@@ -98,14 +105,16 @@
     -webkit-backdrop-filter: blur(5px) !important;
     /* border-radius: 10px !important; */
     justify-content: center !important;
-    gap: 6rem !important;
-    width: 138%;
+    gap: 2rem !important;
+    width: 90%;
+    max-width: 800px;
     margin: 0 !important;
-    padding: 1rem 2rem !important;
-    position: fixed !important;
-    top: 43rem !important;
+    padding: 1rem !important;
+    position: absolute !important;
+    top: 60% !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
+    pointer-events: auto;
 }
 .menuTop .selectionIndicator{
     top: 200%;
@@ -113,10 +122,12 @@
 
 }
 .menuEgg a{
-    color: black
+    color: black;
+    pointer-events: auto;
 }
 .menuEgg .menuItem{
     color: black;
+    pointer-events: auto;
 }
 
 
@@ -144,6 +155,8 @@
     cursor: pointer;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    width: clamp(200px, 20vw, 350px);
+    height: clamp(200px, 20vw, 350px);
 }
 
 .menuVertical .selectionIndicator {
@@ -157,12 +170,34 @@
     transform: none;
 }
 
-.video{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    margin: auto;
+/* Responsive text sizing for very small screens */
+@media (max-width: 480px) {
+  .menu a {
+    padding: 0.25rem;
+  }
+  
+  .menuCentered a {
+  }
+  
+  .menu {
+    width: 90%;
+    gap: 0.5rem;
+  }
+  
+  .menuVertical {
+    width: 90%;
+    gap: 1rem;
+  }
+  
+  .menuTop {
+    width: 95%;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
 }
+
+@media (max-width: 320px) {
+
+}
+
+/* Video styles moved to VideoContainer.module.css */

@@ -40,7 +40,12 @@ function AnimatedSelectIndicator({ onClick, className, style }) {
       height={350}
       className={className}
       onClick={onClick}
-      style={style}
+      style={{
+        ...style,
+        width: 'clamp(200px, 20vw, 350px)',
+        height: 'clamp(200px, 20vw, 350px)',
+        objectFit: 'contain'
+      }}
     />
   );
 }

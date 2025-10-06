@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles/page.module.css";
 import Menu from "./components/Menu";
+import VideoContainer from "./components/VideoContainer";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(true);
@@ -38,16 +39,20 @@ export default function Home() {
       />
       <main className={styles.main}>
         <div className={styles.container}>  
-          <video className={styles.video} src="/videos/introDA.mp4" autoPlay loop muted />
-          <div className={styles.content}>
-            {showMenu && (
-              <Menu 
-                menuItems={menuItems} 
-                onSelect={handleMenuSelect}
-                layout="centered"
-              />
-            )}
-          </div>
+          <VideoContainer 
+            videoSrc="/videos/introDA.mp4"
+            videoProps={{ autoPlay: true, loop: true, muted: true }}
+          >
+            <div className={styles.content}>
+              {showMenu && (
+                <Menu 
+                  menuItems={menuItems} 
+                  onSelect={handleMenuSelect}
+                  layout="centered"
+                />
+              )}
+            </div>
+          </VideoContainer>
         </div>
       </main>
     </div>

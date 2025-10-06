@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../styles/page.module.css";
+import VideoContainer from "../components/VideoContainer";
 
 export default function Home() {
   const videoRef = useRef(null);
@@ -18,12 +19,13 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.container}> 
-          <video 
-            ref={videoRef}
-            className={styles.video} 
-            src="/videos/finale.mp4" 
-            autoPlay 
-            onEnded={handleVideoEnd}
+          <VideoContainer 
+            videoSrc="/videos/finale.mp4"
+            videoProps={{ 
+              autoPlay: true, 
+              onEnded: handleVideoEnd,
+              ref: videoRef
+            }}
           />
         </div>
       </main>

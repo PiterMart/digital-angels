@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Container Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+        }
+        
+        .videoContainer {
+            position: relative;
+            width: auto;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            background-color: #000000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+        .video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+        }
+        
+        .uiOverlay {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .menu {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: auto;
+            width: 80%;
+            max-width: 600px;
+            gap: 1rem;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .menu a {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            padding: 0.5rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .menu a:hover {
+            text-shadow: -9px 12px 20px #fff;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .videoContainer {
+                height: 100vh;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .videoContainer {
+                height: 100vh;
+            }
+        }
+        
+        @media (min-aspect-ratio: 16/9) {
+            .videoContainer {
+                width: 100vw;
+                height: 56.25vw;
+                max-height: 100vh;
+            }
+        }
+        
+        @media (max-aspect-ratio: 16/9) {
+            .videoContainer {
+                width: 177.78vh;
+                height: 100vh;
+                max-width: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="videoContainer">
+        <video class="video" src="/videos/introDA.mp4" autoplay loop muted></video>
+        <div class="uiOverlay">
+            <div class="content">
+                <div class="menu">
+                    <a href="#">Contact Angel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import styles from "../styles/page.module.css";
 import Menu from "../components/Menu";
+import VideoContainer from "../components/VideoContainer";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
@@ -28,21 +29,23 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.container}> 
-          <video 
-            ref={videoRef}
-            className={styles.video} 
-            src="/videos/dead_1.mp4" 
-            autoPlay 
-            onEnded={handleVideoEnd}
-          />
-          <div className={styles.content}>
-            {showMenu && (
-              <Menu 
-                menuItems={menuItems} 
-                onSelect={handleMenuSelect}
-              />
-            )}
-          </div>
+          <VideoContainer 
+            videoSrc="/videos/dead_1.mp4"
+            videoProps={{ 
+              autoPlay: true, 
+              onEnded: handleVideoEnd,
+              ref: videoRef
+            }}
+          >
+            <div className={styles.content}>
+              {showMenu && (
+                <Menu 
+                  menuItems={menuItems} 
+                  onSelect={handleMenuSelect}
+                />
+              )}
+            </div>
+          </VideoContainer>
         </div>
       </main>
     </div>

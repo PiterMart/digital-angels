@@ -1,0 +1,41 @@
+/* VideoContainer - Ensures consistent positioning across all screen sizes */
+.videoContainer {
+  position: relative;
+  /* width/height are controlled inline based on fitted pixels */
+  background-color: #000000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Video fills the container while maintaining aspect ratio */
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* avoid stretch while metadata not ready; container constrains aspect later */
+  z-index: 1;
+}
+
+/* UI overlay positioned relative to the video container */
+.uiOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none; /* Allow clicks to pass through to video when no UI is present */
+}
+
+/* Re-enable pointer events for interactive elements */
+.uiOverlay > * {
+  pointer-events: auto;
+}
+
+/* Responsive adjustments for different screen sizes */
+/* Media queries no longer needed; sizing handled in JS */
