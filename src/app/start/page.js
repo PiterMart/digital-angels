@@ -26,6 +26,15 @@ export default function Home() {
     setIsIOS(isIOSDevice);
   }, []);
 
+  // Debug video ref changes
+  useEffect(() => {
+    console.log("Video ref changed:", videoRef.current);
+    if (videoRef.current) {
+      console.log("Video element found:", videoRef.current.tagName);
+      console.log("Video src:", videoRef.current.src);
+    }
+  }, [videoRef.current]);
+
   const handleVideoEnd = () => {
     // Trigger the network-aware menu display
     if (window.showNetworkAwareMenu) {
@@ -62,11 +71,16 @@ export default function Home() {
   const startVideo = async () => {
     console.log("Play button clicked");
     console.log("Video ref:", videoRef.current);
+    console.log("Video ref type:", typeof videoRef.current);
+    console.log("Video ref readyState:", videoRef.current?.readyState);
+    console.log("Video ref paused:", videoRef.current?.paused);
+    console.log("Video ref src:", videoRef.current?.src);
     
     if (videoRef.current) {
       try {
         // Ensure video is muted for iOS compatibility
         videoRef.current.muted = true;
+        console.log("Video muted set to:", videoRef.current.muted);
         
         // Check if video is ready to play
         if (videoRef.current.readyState >= 2) { // HAVE_CURRENT_DATA
@@ -79,6 +93,7 @@ export default function Home() {
           // Wait for video to be ready
           videoRef.current.addEventListener('canplay', async () => {
             try {
+              console.log("Canplay event fired, attempting to play...");
               await videoRef.current.play();
               console.log("Video play successful after canplay");
               setVideoStarted(true);
@@ -89,11 +104,13 @@ export default function Home() {
           }, { once: true });
           
           // Load the video if it hasn't been loaded yet
+          console.log("Loading video...");
           videoRef.current.load();
         }
       } catch (error) {
         console.error("Failed to start video:", error);
         console.error("Error details:", error.message);
+        console.error("Error stack:", error.stack);
         // If autoplay fails, show menu
         setTimeout(() => {
           setShowMenu(true);

@@ -1,5 +1,5 @@
 "use client";
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, useImperativeHandle } from "react";
 import styles from "../styles/VideoContainer.module.css";
 
 const VideoContainer = forwardRef(({ 
@@ -11,7 +11,9 @@ const VideoContainer = forwardRef(({
   intrinsicHeight // optional: pass known video height
 }, ref) => {
   const internalVideoRef = useRef(null);
-  const videoElRef = ref || internalVideoRef;
+  
+  // Expose the video element ref to parent components
+  useImperativeHandle(ref, () => internalVideoRef.current, []);
   const [naturalSize, setNaturalSize] = useState({ width: intrinsicWidth || 1080, height: intrinsicHeight || 1920 });
   const [renderSize, setRenderSize] = useState({ width: 0, height: 0 });
 
@@ -69,7 +71,7 @@ const VideoContainer = forwardRef(({
   return (
     <div className={`${styles.videoContainer} ${className}`} style={containerStyle}>
       <video
-        ref={videoElRef}
+        ref={internalVideoRef}
         className={styles.video}
         src={videoSrc}
         onLoadedMetadata={handleLoadedMetadata}
