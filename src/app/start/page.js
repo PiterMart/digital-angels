@@ -19,6 +19,10 @@ export default function Home() {
   useEffect(() => {
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    console.log("iOS detection:", isIOSDevice);
+    console.log("User agent:", navigator.userAgent);
+    console.log("Platform:", navigator.platform);
+    console.log("Max touch points:", navigator.maxTouchPoints);
     setIsIOS(isIOSDevice);
   }, []);
 
@@ -47,18 +51,56 @@ export default function Home() {
     }, 1000);
   };
 
+  const handleVideoLoaded = () => {
+    console.log("Video loaded successfully");
+  };
+
+  const handleVideoCanPlay = () => {
+    console.log("Video can play");
+  };
+
   const startVideo = async () => {
+    console.log("Play button clicked");
+    console.log("Video ref:", videoRef.current);
+    
     if (videoRef.current) {
       try {
-        await videoRef.current.play();
-        setVideoStarted(true);
+        // Ensure video is muted for iOS compatibility
+        videoRef.current.muted = true;
+        
+        // Check if video is ready to play
+        if (videoRef.current.readyState >= 2) { // HAVE_CURRENT_DATA
+          console.log("Video is ready, attempting to play...");
+          await videoRef.current.play();
+          console.log("Video play successful");
+          setVideoStarted(true);
+        } else {
+          console.log("Video not ready, waiting for canplay event...");
+          // Wait for video to be ready
+          videoRef.current.addEventListener('canplay', async () => {
+            try {
+              await videoRef.current.play();
+              console.log("Video play successful after canplay");
+              setVideoStarted(true);
+            } catch (playError) {
+              console.error("Failed to play after canplay:", playError);
+              setTimeout(() => setShowMenu(true), 1000);
+            }
+          }, { once: true });
+          
+          // Load the video if it hasn't been loaded yet
+          videoRef.current.load();
+        }
       } catch (error) {
         console.error("Failed to start video:", error);
+        console.error("Error details:", error.message);
         // If autoplay fails, show menu
         setTimeout(() => {
           setShowMenu(true);
         }, 1000);
       }
+    } else {
+      console.error("Video ref is null");
     }
   };
 
@@ -72,13 +114,16 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.container}> 
           <VideoContainer 
+            ref={videoRef}
             videoSrc="/videos/start.mp4"
             videoProps={{ 
               autoPlay: !isIOS, // Disable autoplay on iOS
               onEnded: handleVideoEnd,
               onPlay: handleVideoPlay,
               onError: handleVideoError,
-              ref: videoRef
+              onLoadedData: handleVideoLoaded,
+              onCanPlay: handleVideoCanPlay,
+              muted: true // Ensure muted for iOS compatibility
             }}
           >
             <div className={styles.content} style={{marginTop: "30vh"}}>
@@ -110,6 +155,22 @@ export default function Home() {
                   </button>
                 </div>
               )}
+              
+              {/* Debug info */}
+              <div style={{
+                position: 'absolute',
+                top: '10px',
+                left: '10px',
+                background: 'rgba(0,0,0,0.7)',
+                color: 'white',
+                padding: '10px',
+                fontSize: '12px',
+                zIndex: 30
+              }}>
+                iOS: {isIOS ? 'Yes' : 'No'}<br/>
+                Video Started: {videoStarted ? 'Yes' : 'No'}<br/>
+                Video Ref: {videoRef.current ? 'Exists' : 'Null'}
+              </div>
               
               <NetworkAwareMenu 
                 menuItems={menuItems} 
