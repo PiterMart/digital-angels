@@ -73,6 +73,9 @@ const VideoContainer = forwardRef(({
         className={styles.video}
         src={videoSrc}
         onLoadedMetadata={handleLoadedMetadata}
+        playsInline
+        webkit-playsinline="true"
+        preload="auto"
         {...videoProps}
       />
       <div className={styles.uiOverlay}>

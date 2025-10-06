@@ -6,11 +6,19 @@ import VideoContainer from "./components/VideoContainer";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(true);
+  const [isIOS, setIsIOS] = useState(false);
   const audioRef = useRef(null);
 
   const menuItems = [
     { text: "contact angel", href: "/start" }
   ];
+
+  // Detect iOS
+  useEffect(() => {
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    setIsIOS(isIOSDevice);
+  }, []);
 
   useEffect(() => {
     // Start playing background music when component mounts
@@ -41,7 +49,7 @@ export default function Home() {
         <div className={styles.container}>  
           <VideoContainer 
             videoSrc="/videos/introDA.mp4"
-            videoProps={{ autoPlay: true, loop: true, muted: true }}
+            videoProps={{ autoPlay: !isIOS, loop: true, muted: true }}
           >
             <div className={styles.content}>
               {showMenu && (
