@@ -42,7 +42,7 @@ export default function Home() {
               ref: videoRef
             }}
           >
-            <div className={styles.content}>
+            <div className={styles.content} style={{marginTop: "30vh"}}>
               <NetworkAwareMenu 
                 menuItems={menuItems} 
                 onSelect={handleMenuSelect}

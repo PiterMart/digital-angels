@@ -37,7 +37,7 @@ export default function Home() {
               ref: videoRef
             }}
           >
-            <div className={styles.content}>
+            <div className={styles.content} style={{marginTop: "30vh"}}>
               {showMenu && (
                 <Menu 
                   menuItems={menuItems} 
