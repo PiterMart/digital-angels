@@ -92,6 +92,7 @@
 .menuCentered .selectionIndicator{
     top: 26%;
     left: 231px;
+    display: none;
 }
 
 .menuVertical {
@@ -122,8 +123,8 @@
     pointer-events: auto;
 }
 .menuTop .selectionIndicator{
-    top: 200%;
-    left: 68px
+    top: -10%;
+    left: 10%;
 
 }
 .menuEgg a{
@@ -154,24 +155,20 @@
 .selectionIndicator {
     filter: drop-shadow(0 0 5px rgb(255, 255, 255));
     position: absolute;
-    top: 185%;
-    left: -119px;
+    top: 200%;
     transform: translateY(-50%);
     cursor: pointer;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    width: clamp(200px, 20vw, 350px);
-    height: clamp(200px, 20vw, 350px);
+    width: auto;
+    height: auto;
+    max-width: 65px;
 }
 
 .menuVertical .selectionIndicator {
-    margin-right: -7rem;
-    margin-left: -6rem;
     position: relative;
     top: auto;
     left: auto;
-    margin-top: -5rem;
-    margin-bottom: -6rem;
     transform: none;
 }
 

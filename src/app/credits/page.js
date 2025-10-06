@@ -1,6 +1,7 @@
 "use client";
 import HeroSection from "../components/HeroSection";
 import Menu from "../components/Menu";
+import Link from "next/link";
 
 
 const menuItems = [
@@ -26,6 +27,7 @@ export default function Credits() {
                       layout="centered"
     />
       <HeroSection />
+      <Link href="/" style={{color: "GRAY", textDecoration: "underline", fontSize: "1.5rem", fontWeight: "bold", marginTop: "2rem", bottom: "0px", position: "fixed", right: "50px", zIndex: "1000"}}>Go Home</Link>
     </div>
   );
 }

@@ -34,18 +34,12 @@ function AnimatedSelectIndicator({ onClick, className, style }) {
 
   return (
     <Image
-      src={`/l0_sprite_${currentFrame}.png`}
+      src={`/sprite${currentFrame}.png`}
       alt="Selection indicator"
       width={350}
       height={350}
       className={className}
       onClick={onClick}
-      style={{
-        ...style,
-        width: 'clamp(200px, 20vw, 350px)',
-        height: 'clamp(200px, 20vw, 350px)',
-        objectFit: 'contain'
-      }}
     />
   );
 }
