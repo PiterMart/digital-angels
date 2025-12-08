@@ -79,7 +79,7 @@ export default function Home() {
     if (videoRef.current) {
       try {
         // Ensure video is muted for iOS compatibility
-        videoRef.current.muted = true;
+        videoRef.current.muted = false;
         console.log("Video muted set to:", videoRef.current.muted);
         
         // Check if video is ready to play
@@ -140,7 +140,7 @@ export default function Home() {
               onError: handleVideoError,
               onLoadedData: handleVideoLoaded,
               onCanPlay: handleVideoCanPlay,
-              muted: true // Ensure muted for iOS compatibility
+              muted: false // Video should play with sound
             }}
           >
             <div className={styles.content} style={{marginTop: "30vh"}}>

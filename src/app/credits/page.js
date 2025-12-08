@@ -27,7 +27,7 @@ export default function Credits() {
                       layout="centered"
     />
       <HeroSection />
-      <Link href="/" style={{color: "GRAY", textDecoration: "underline", fontSize: "1.5rem", fontWeight: "bold", marginTop: "2rem", bottom: "0px", position: "fixed", right: "50px", zIndex: "1000"}}>Go Home</Link>
+      <Link href="/" style={{color: "gray", textDecoration: "underline", fontSize: "1.5rem", fontWeight: "bold", marginTop: "2rem", bottom: "0px", position: "fixed", right: "50px", zIndex: "1000"}}>Go Home</Link>
     </div>
   );
 }
