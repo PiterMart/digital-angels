@@ -8,6 +8,7 @@ import PlaySpriteButton from "../components/PlaySpriteButton";
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const [videoStarted, setVideoStarted] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef(null);
 
   const menuItems = [
@@ -32,6 +33,7 @@ export default function Home() {
             ref={videoRef}
             videoSrc="/videos/Yes_1.mp4"
             videoBlur={!videoStarted}
+            onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,
               onEnded: handleVideoEnd,
@@ -39,7 +41,7 @@ export default function Home() {
             }}
           >
             <div className={styles.content} style={{ marginTop: "-35vh" }}>
-              {!videoStarted && <PlaySpriteButton onClick={playVideo} />}
+              {videoReady && !videoStarted && <PlaySpriteButton onClick={playVideo} />}
               {showMenu && (
                 <Menu menuItems={menuItems} onSelect={handleMenuSelect} layout="top" />
               )}

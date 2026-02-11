@@ -7,6 +7,7 @@ import PlaySpriteButton from "../components/PlaySpriteButton";
 
 export default function Home() {
   const [videoStarted, setVideoStarted] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef(null);
   const router = useRouter();
 
@@ -28,13 +29,14 @@ export default function Home() {
             ref={videoRef}
             videoSrc="/videos/finale.mp4"
             videoBlur={!videoStarted}
+            onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,
               onEnded: handleVideoEnd,
               onPlay: () => setVideoStarted(true),
             }}
           >
-            {!videoStarted && <PlaySpriteButton onClick={playVideo} />}
+            {videoReady && !videoStarted && <PlaySpriteButton onClick={playVideo} />}
           </VideoContainer>
         </div>
       </main>

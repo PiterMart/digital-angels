@@ -10,11 +10,21 @@ const VideoContainer = forwardRef(({
   intrinsicWidth, // optional: pass known video width
   intrinsicHeight, // optional: pass known video height
   videoBlur = false, // when true, blurs the video (e.g. until user presses play)
+  onVideoReady, // optional: called with video element when mounted (helps iOS ref timing)
 }, ref) => {
   const internalVideoRef = useRef(null);
+  const onVideoReadyRef = useRef(onVideoReady);
+  onVideoReadyRef.current = onVideoReady;
   
-  // Expose the video element ref to parent components
-  useImperativeHandle(ref, () => internalVideoRef.current, []);
+  useImperativeHandle(ref, () => ({
+    get video() {
+      return internalVideoRef.current;
+    },
+    play() {
+      const v = internalVideoRef.current;
+      return v ? v.play() : Promise.reject(new Error("No video"));
+    },
+  }), []);
   const [naturalSize, setNaturalSize] = useState({ width: intrinsicWidth || 1080, height: intrinsicHeight || 1920 });
   const [renderSize, setRenderSize] = useState({ width: 0, height: 0 });
 
@@ -72,16 +82,35 @@ const VideoContainer = forwardRef(({
   return (
     <div className={`${styles.videoContainer} ${className}`} style={containerStyle}>
       <video
-        ref={internalVideoRef}
+        ref={(el) => {
+          internalVideoRef.current = el;
+          if (el && onVideoReadyRef.current) onVideoReadyRef.current(el);
+        }}
         className={styles.video}
         style={{ filter: videoBlur ? "blur(12px)" : "none", transition: "filter 0.5s ease" }}
         src={videoSrc}
         onLoadedMetadata={handleLoadedMetadata}
         playsInline
         webkit-playsinline="true"
+        playsinline="true"
         preload="auto"
         {...videoProps}
       />
+      {videoBlur && (
+        <div
+          className={styles.blurOverlay}
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 5,
+            background: "rgba(0,0,0,0.5)",
+            WebkitBackdropFilter: "blur(12px)",
+            backdropFilter: "blur(12px)",
+            transition: "opacity 0.5s ease",
+          }}
+          aria-hidden
+        />
+      )}
       <div className={styles.uiOverlay}>
         {children}
       </div>

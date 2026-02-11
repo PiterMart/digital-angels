@@ -10,6 +10,7 @@ export default function Home() {
   const [videoStarted, setVideoStarted] = useState(false);
   const [isPlayingBreakingVideo, setIsPlayingBreakingVideo] = useState(false);
   const [isPlayingPrayingVideo, setIsPlayingPrayingVideo] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef(null);
 
   const menuItems = [
@@ -30,21 +31,23 @@ export default function Home() {
   };
 
   const handleMenuSelect = (selectedItem) => {
+    const container = videoRef.current;
+    const video = container?.video;
     if (selectedItem.text === "break it") {
       setShowMenu(false);
       setIsPlayingBreakingVideo(true);
-      if (videoRef.current) {
-        videoRef.current.src = "/videos/breaking egg.mp4";
-        videoRef.current.load();
-        videoRef.current.play();
+      if (video) {
+        video.src = "/videos/breaking egg.mp4";
+        video.load();
+        container.play().then(() => {}).catch(() => {});
       }
     } else if (selectedItem.text === "pray") {
       setShowMenu(false);
       setIsPlayingPrayingVideo(true);
-      if (videoRef.current) {
-        videoRef.current.src = "/videos/va a rezar_1.mp4";
-        videoRef.current.load();
-        videoRef.current.play();
+      if (video) {
+        video.src = "/videos/va a rezar_1.mp4";
+        video.load();
+        container.play().then(() => {}).catch(() => {});
       }
     } else {
       window.location.href = selectedItem.href;
@@ -65,6 +68,7 @@ export default function Home() {
             ref={videoRef}
             videoSrc="/videos/camina hacia el huevo_1.mp4"
             videoBlur={!videoStarted}
+            onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,
               onEnded: isPlayingBreakingVideo ? handleBreakingVideoEnd : isPlayingPrayingVideo ? handlePrayingVideoEnd : handleVideoEnd,
@@ -72,7 +76,7 @@ export default function Home() {
             }}
           >
             <div className={styles.content} style={{ marginTop: "30vh", fontWeight: "bold" }}>
-              {!videoStarted && <PlaySpriteButton onClick={playVideo} />}
+              {videoReady && !videoStarted && <PlaySpriteButton onClick={playVideo} />}
               {showMenu && (
                 <Menu
                   menuItems={menuItems}

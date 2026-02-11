@@ -8,6 +8,7 @@ import PlaySpriteButton from "../components/PlaySpriteButton";
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const [videoStarted, setVideoStarted] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef(null);
 
   const menuItems = [
@@ -30,16 +31,17 @@ export default function Home() {
   };
 
   const playVideo = () => {
-    const video = videoRef.current;
+    const container = videoRef.current;
+    const video = container?.video;
     if (!video) return;
     video.muted = false;
-    const p = video.play();
+    const p = container.play();
     if (p && typeof p.then === "function") {
       p.then(() => setVideoStarted(true)).catch(() => {
         if (video.readyState < 2) {
           video.load();
           video.addEventListener("canplay", () => {
-            video.play().then(() => setVideoStarted(true)).catch(() => setTimeout(() => setShowMenu(true), 1000));
+            container.play().then(() => setVideoStarted(true)).catch(() => setTimeout(() => setShowMenu(true), 1000));
           }, { once: true });
         } else {
           setTimeout(() => setShowMenu(true), 1000);
@@ -62,6 +64,7 @@ export default function Home() {
             ref={videoRef}
             videoSrc="/videos/start.mp4"
             videoBlur={!videoStarted}
+            onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,
               onEnded: handleVideoEnd,
@@ -71,7 +74,7 @@ export default function Home() {
             }}
           >
             <div className={styles.content} style={{ marginTop: "30vh" }}>
-              {!videoStarted && <PlaySpriteButton onClick={playVideo} />}
+              {videoReady && !videoStarted && <PlaySpriteButton onClick={playVideo} />}
               <NetworkAwareMenu
                 menuItems={menuItems}
                 onSelect={handleMenuSelect}
