@@ -30,27 +30,28 @@ export default function Home() {
     setTimeout(() => setShowMenu(true), 1000);
   };
 
-  const playVideo = () => {
+  const playVideo = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     const container = videoRef.current;
-    const video = container?.video;
+    const video = container?.video || container;
 
     if (!video) return;
 
-    // 1. Force iOS-friendly props right before play
-    video.setAttribute("playsinline", "true");
     video.muted = false;
+    video.setAttribute("playsinline", "true");
+    video.load();
 
-    // 2. Play immediately (synchronous call)
     const promise = video.play();
 
     if (promise !== undefined) {
       promise
-        .then(() => {
-          setVideoStarted(true);
-        })
-        .catch((error) => {
-          console.error("Error en iOS Play:", error);
-          // Fallback: try muted so at least video is visible
+        .then(() => setVideoStarted(true))
+        .catch((err) => {
+          console.warn("Fallo con audio, intentando muteado...", err);
           video.muted = true;
           video
             .play()
@@ -84,7 +85,27 @@ export default function Home() {
             }}
           >
             <div className={styles.content} style={{ marginTop: "30vh" }}>
-              {videoReady && !videoStarted && <PlaySpriteButton onClick={playVideo} />}
+              {videoReady && !videoStarted && (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    display: "inline-block",
+                    minWidth: "min(40vw, 200px)",
+                    minHeight: "min(40vw, 200px)",
+                    zIndex: 25,
+                  }}
+                >
+                  <PlaySpriteButton />
+                  <button
+                    className={styles.invisibleAnchor}
+                    onClick={playVideo}
+                    aria-label="Play Video"
+                  />
+                </div>
+              )}
               <NetworkAwareMenu
                 menuItems={menuItems}
                 onSelect={handleMenuSelect}

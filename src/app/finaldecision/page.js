@@ -54,18 +54,23 @@ export default function Home() {
     }
   };
 
-  const playVideo = () => {
+  const playVideo = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const container = videoRef.current;
-    const video = container?.video;
+    const video = container?.video || container;
     if (!video) return;
-    video.setAttribute("playsinline", "true");
     video.muted = false;
+    video.setAttribute("playsinline", "true");
+    video.load();
     const promise = video.play();
     if (promise !== undefined) {
       promise
         .then(() => setVideoStarted(true))
-        .catch((error) => {
-          console.error("Error en iOS Play:", error);
+        .catch((err) => {
+          console.warn("Fallo con audio, intentando muteado...", err);
           video.muted = true;
           video.play().then(() => setVideoStarted(true)).catch(() => setTimeout(() => setShowMenu(true), 1000));
         });
@@ -90,7 +95,12 @@ export default function Home() {
             }}
           >
             <div className={styles.content} style={{ marginTop: "30vh", fontWeight: "bold" }}>
-              {videoReady && !videoStarted && <PlaySpriteButton onClick={playVideo} />}
+              {videoReady && !videoStarted && (
+                <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "inline-block", minWidth: "min(40vw, 200px)", minHeight: "min(40vw, 200px)", zIndex: 25 }}>
+                  <PlaySpriteButton />
+                  <button className={styles.invisibleAnchor} onClick={playVideo} aria-label="Play Video" />
+                </div>
+              )}
               {showMenu && (
                 <Menu
                   menuItems={menuItems}
