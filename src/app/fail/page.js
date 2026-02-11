@@ -29,20 +29,22 @@ export default function Home() {
 
     setVideoStarted(true);
 
-    video.muted = false;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "true");
-    video.load();
+    setTimeout(() => {
+      video.muted = false;
+      video.playsInline = true;
+      video.setAttribute("playsinline", "true");
+      video.load();
 
-    const promise = video.play();
+      const promise = video.play();
 
-    if (promise !== undefined) {
-      promise.catch((err) => {
-        console.warn("Retrying muted for iOS policy...", err);
-        video.muted = true;
-        video.play();
-      });
-    }
+      if (promise !== undefined) {
+        promise.catch((err) => {
+          console.warn("Retrying muted for iOS policy...", err);
+          video.muted = true;
+          video.play();
+        });
+      }
+    }, 50);
   };
 
   return (
