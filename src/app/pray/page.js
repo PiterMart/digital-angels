@@ -26,20 +26,27 @@ export default function Home() {
       e.preventDefault();
       e.stopPropagation();
     }
+
     const container = videoRef.current;
     const video = container?.video || container;
+
     if (!video) return;
+
+    video.setAttribute("muted", "false");
     video.muted = false;
+    video.playsInline = true;
     video.setAttribute("playsinline", "true");
     video.load();
+
     const promise = video.play();
+
     if (promise !== undefined) {
       promise
         .then(() => setVideoStarted(true))
         .catch((err) => {
-          console.warn("Fallo con audio, intentando muteado...", err);
+          console.warn("Audio play blocked, falling back to muted", err);
           video.muted = true;
-          video.play().then(() => setVideoStarted(true)).catch(() => setTimeout(() => setShowMenu(true), 1000));
+          video.play().then(() => setVideoStarted(true));
         });
     } else {
       setVideoStarted(true);
