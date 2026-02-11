@@ -8,7 +8,8 @@ const VideoContainer = forwardRef(({
   videoProps = {}, 
   className = "",
   intrinsicWidth, // optional: pass known video width
-  intrinsicHeight // optional: pass known video height
+  intrinsicHeight, // optional: pass known video height
+  videoBlur = false, // when true, blurs the video (e.g. until user presses play)
 }, ref) => {
   const internalVideoRef = useRef(null);
   
@@ -73,6 +74,7 @@ const VideoContainer = forwardRef(({
       <video
         ref={internalVideoRef}
         className={styles.video}
+        style={{ filter: videoBlur ? "blur(12px)" : "none", transition: "filter 0.5s ease" }}
         src={videoSrc}
         onLoadedMetadata={handleLoadedMetadata}
         playsInline

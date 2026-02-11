@@ -1,32 +1,43 @@
 "use client";
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../styles/page.module.css";
 import VideoContainer from "../components/VideoContainer";
+import PlaySpriteButton from "../components/PlaySpriteButton";
 
 export default function Home() {
+  const [videoStarted, setVideoStarted] = useState(false);
   const videoRef = useRef(null);
   const router = useRouter();
 
   const handleVideoEnd = () => {
-    // Add a small delay before redirecting to credits
-    setTimeout(() => {
-      router.push('/credits');
-    }, 1000); // 1 second delay
+    setTimeout(() => router.push('/credits'), 1000);
+  };
+
+  const playVideo = async () => {
+    if (!videoRef.current) return;
+    try {
+      await videoRef.current.play();
+      setVideoStarted(true);
+    } catch {}
   };
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <div className={styles.container}> 
-          <VideoContainer 
+        <div className={styles.container}>
+          <VideoContainer
+            ref={videoRef}
             videoSrc="/videos/finale.mp4"
-            videoProps={{ 
-              autoPlay: true, 
+            videoBlur={!videoStarted}
+            videoProps={{
+              autoPlay: false,
               onEnded: handleVideoEnd,
-              ref: videoRef
+              onPlay: () => setVideoStarted(true),
             }}
-          />
+          >
+            {!videoStarted && <PlaySpriteButton onClick={playVideo} />}
+          </VideoContainer>
         </div>
       </main>
     </div>

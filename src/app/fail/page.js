@@ -3,47 +3,44 @@ import { useState, useRef } from "react";
 import styles from "../styles/page.module.css";
 import Menu from "../components/Menu";
 import VideoContainer from "../components/VideoContainer";
+import PlaySpriteButton from "../components/PlaySpriteButton";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
   const videoRef = useRef(null);
 
-  const menuItems = [
-    { text: "retry", href: "/" },
+  const menuItems = [{ text: "retry", href: "/" }];
 
-  ];
+  const handleVideoEnd = () => setTimeout(() => setShowMenu(true), 500);
+  const handleMenuSelect = (selectedItem) => { window.location.href = selectedItem.href; };
 
-  const handleVideoEnd = () => {
-    // Add a delay before showing the menu to ensure proper rendering
-    setTimeout(() => {
-      setShowMenu(true);
-    }, 500); // 500ms delay for better reliability
-  };
-
-  const handleMenuSelect = (selectedItem) => {
-    // Handle menu selection if needed
-    window.location.href = selectedItem.href;
+  const playVideo = async () => {
+    if (!videoRef.current) return;
+    try {
+      await videoRef.current.play();
+      setVideoStarted(true);
+    } catch {}
   };
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <div className={styles.container}> 
-          <VideoContainer 
+        <div className={styles.container}>
+          <VideoContainer
+            ref={videoRef}
             videoSrc="/videos/dead_1.mp4"
-            videoProps={{ 
-              autoPlay: true, 
+            videoBlur={!videoStarted}
+            videoProps={{
+              autoPlay: false,
               onEnded: handleVideoEnd,
-              ref: videoRef
+              onPlay: () => setVideoStarted(true),
             }}
           >
             <div className={styles.content}>
+              {!videoStarted && <PlaySpriteButton onClick={playVideo} />}
               {showMenu && (
-                <Menu 
-                  menuItems={menuItems} 
-                  onSelect={handleMenuSelect}
-                  layout="centered"
-                />
+                <Menu menuItems={menuItems} onSelect={handleMenuSelect} layout="centered" />
               )}
             </div>
           </VideoContainer>
