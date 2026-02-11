@@ -16,8 +16,8 @@ export default function RootLayout({ children }) {
         <link rel="preload" href="/fonts/FT88-Serif.otf" as="font" type="font/otf" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/FT88-Gothique.otf" as="font" type="font/otf" crossOrigin="anonymous" />
         {/* Preload critical videos */}
-        <link rel="preload" href="/videos/start.mp4" as="video" />
-        <link rel="preload" href="/videos/introDA.mp4" as="video" />
+        <link rel="preload" href="/videos/start_1.mp4" as="video" />
+        <link rel="preload" href="/videos/introDA_1.mp4" as="video" />
       </head>
       <body>
         <FontLoader />

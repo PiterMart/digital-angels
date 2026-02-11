@@ -41,24 +41,24 @@ export default function Home() {
 
     if (!video) return;
 
-    setVideoStarted(true);
+    video.muted = false;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    video.load();
 
-    setTimeout(() => {
-      video.muted = false;
-      video.playsInline = true;
-      video.setAttribute("playsinline", "true");
-      video.load();
+    const promise = video.play();
 
-      const promise = video.play();
-
-      if (promise !== undefined) {
-        promise.catch((err) => {
+    if (promise !== undefined) {
+      promise
+        .then(() => setVideoStarted(true))
+        .catch((err) => {
           console.warn("Retrying muted for iOS policy...", err);
           video.muted = true;
-          video.play();
+          video.play().then(() => setVideoStarted(true));
         });
-      }
-    }, 50);
+    } else {
+      setVideoStarted(true);
+    }
   };
 
   const handleMenuSelect = (selectedItem) => {
@@ -71,7 +71,7 @@ export default function Home() {
         <div className={styles.container}>
           <VideoContainer
             ref={videoRef}
-            videoSrc="/videos/start.mp4"
+            videoSrc="/videos/start_1.mp4"
             onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,

@@ -37,7 +37,7 @@ export default function Home() {
       setShowMenu(false);
       setIsPlayingBreakingVideo(true);
       if (video) {
-        video.src = "/videos/breaking egg.mp4";
+        video.src = "/videos/breaking egg_1.mp4";
         video.load();
         container.play().then(() => {}).catch(() => {});
       }
@@ -45,7 +45,7 @@ export default function Home() {
       setShowMenu(false);
       setIsPlayingPrayingVideo(true);
       if (video) {
-        video.src = "/videos/va a rezar_1.mp4";
+        video.src = "/videos/va a rezar_1_1.mp4";
         video.load();
         container.play().then(() => {}).catch(() => {});
       }
@@ -65,24 +65,24 @@ export default function Home() {
 
     if (!video) return;
 
-    setVideoStarted(true);
+    video.muted = false;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    video.load();
 
-    setTimeout(() => {
-      video.muted = false;
-      video.playsInline = true;
-      video.setAttribute("playsinline", "true");
-      video.load();
+    const promise = video.play();
 
-      const promise = video.play();
-
-      if (promise !== undefined) {
-        promise.catch((err) => {
+    if (promise !== undefined) {
+      promise
+        .then(() => setVideoStarted(true))
+        .catch((err) => {
           console.warn("Retrying muted for iOS policy...", err);
           video.muted = true;
-          video.play();
+          video.play().then(() => setVideoStarted(true));
         });
-      }
-    }, 50);
+    } else {
+      setVideoStarted(true);
+    }
   };
 
   return (
@@ -91,7 +91,7 @@ export default function Home() {
         <div className={styles.container}>
           <VideoContainer
             ref={videoRef}
-            videoSrc="/videos/camina hacia el huevo_1.mp4"
+            videoSrc="/videos/camina hacia el huevo_1_1.mp4"
             onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,

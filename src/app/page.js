@@ -48,7 +48,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.container}>  
           <VideoContainer 
-            videoSrc="/videos/introDA.mp4"
+            videoSrc="/videos/introDA_1.mp4"
             videoProps={{ autoPlay: !isIOS, loop: true, muted: true }}
           >
             <div className={styles.content}>
