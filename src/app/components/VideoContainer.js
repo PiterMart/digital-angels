@@ -91,9 +91,8 @@ const VideoContainer = forwardRef(({
         src={videoSrc}
         onLoadedMetadata={handleLoadedMetadata}
         playsInline
-        webkit-playsinline="true"
-        playsinline="true"
         preload="auto"
+        suppressHydrationWarning
         {...videoProps}
       />
       {videoBlur && (

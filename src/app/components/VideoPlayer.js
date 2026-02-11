@@ -103,7 +103,6 @@ export default function VideoPlayer({
       onCanPlay={handleVideoCanPlay}
       preload="auto"
       playsInline
-      webkit-playsinline="true"
       muted={false}
     />
   );

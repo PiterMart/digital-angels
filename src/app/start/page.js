@@ -33,20 +33,30 @@ export default function Home() {
   const playVideo = () => {
     const container = videoRef.current;
     const video = container?.video;
+
     if (!video) return;
+
+    // 1. Force iOS-friendly props right before play
+    video.setAttribute("playsinline", "true");
     video.muted = false;
-    const p = container.play();
-    if (p && typeof p.then === "function") {
-      p.then(() => setVideoStarted(true)).catch(() => {
-        if (video.readyState < 2) {
-          video.load();
-          video.addEventListener("canplay", () => {
-            container.play().then(() => setVideoStarted(true)).catch(() => setTimeout(() => setShowMenu(true), 1000));
-          }, { once: true });
-        } else {
-          setTimeout(() => setShowMenu(true), 1000);
-        }
-      });
+
+    // 2. Play immediately (synchronous call)
+    const promise = video.play();
+
+    if (promise !== undefined) {
+      promise
+        .then(() => {
+          setVideoStarted(true);
+        })
+        .catch((error) => {
+          console.error("Error en iOS Play:", error);
+          // Fallback: try muted so at least video is visible
+          video.muted = true;
+          video
+            .play()
+            .then(() => setVideoStarted(true))
+            .catch(() => setTimeout(() => setShowMenu(true), 1000));
+        });
     } else {
       setVideoStarted(true);
     }
