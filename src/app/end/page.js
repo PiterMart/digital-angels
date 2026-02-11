@@ -26,7 +26,8 @@ export default function Home() {
 
     if (!video) return;
 
-    video.setAttribute("muted", "false");
+    setVideoStarted(true);
+
     video.muted = false;
     video.playsInline = true;
     video.setAttribute("playsinline", "true");
@@ -35,15 +36,11 @@ export default function Home() {
     const promise = video.play();
 
     if (promise !== undefined) {
-      promise
-        .then(() => setVideoStarted(true))
-        .catch((err) => {
-          console.warn("Audio play blocked, falling back to muted", err);
-          video.muted = true;
-          video.play().then(() => setVideoStarted(true));
-        });
-    } else {
-      setVideoStarted(true);
+      promise.catch((err) => {
+        console.warn("Retrying muted for iOS policy...", err);
+        video.muted = true;
+        video.play();
+      });
     }
   };
 
