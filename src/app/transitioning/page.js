@@ -55,7 +55,6 @@ export default function Home() {
           <VideoContainer
             ref={videoRef}
             videoSrc="/videos/Yes_1.mp4"
-            videoBlur={!videoStarted}
             onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,

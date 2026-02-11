@@ -41,7 +41,6 @@ export default function Home() {
 
     if (!video) return;
 
-    // Visual "unlock": remove blur/overlay BEFORE play so iOS will paint frames
     setVideoStarted(true);
 
     video.muted = false;
@@ -71,7 +70,6 @@ export default function Home() {
           <VideoContainer
             ref={videoRef}
             videoSrc="/videos/start.mp4"
-            videoBlur={!videoStarted}
             onVideoReady={() => setVideoReady(true)}
             videoProps={{
               autoPlay: false,

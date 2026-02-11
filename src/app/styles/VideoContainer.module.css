@@ -21,10 +21,6 @@
   z-index: 1;
 }
 
-.blurOverlay {
-  pointer-events: none;
-}
-
 /* UI overlay positioned relative to the video container */
 .uiOverlay {
   position: absolute;

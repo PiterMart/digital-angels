@@ -7,10 +7,9 @@ const VideoContainer = forwardRef(({
   videoSrc, 
   videoProps = {}, 
   className = "",
-  intrinsicWidth, // optional: pass known video width
-  intrinsicHeight, // optional: pass known video height
-  videoBlur = false, // when true, blurs the video (e.g. until user presses play)
-  onVideoReady, // optional: called with video element when mounted (helps iOS ref timing)
+  intrinsicWidth,
+  intrinsicHeight,
+  onVideoReady,
 }, ref) => {
   const internalVideoRef = useRef(null);
   const onVideoReadyRef = useRef(onVideoReady);
@@ -87,7 +86,6 @@ const VideoContainer = forwardRef(({
           if (el && onVideoReadyRef.current) onVideoReadyRef.current(el);
         }}
         className={styles.video}
-        style={{ filter: videoBlur ? "blur(12px)" : "none", transition: "filter 0.5s ease" }}
         src={videoSrc}
         onLoadedMetadata={handleLoadedMetadata}
         playsInline
@@ -95,21 +93,6 @@ const VideoContainer = forwardRef(({
         suppressHydrationWarning
         {...videoProps}
       />
-      {videoBlur && (
-        <div
-          className={styles.blurOverlay}
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 5,
-            background: "rgba(0,0,0,0.5)",
-            WebkitBackdropFilter: "blur(12px)",
-            backdropFilter: "blur(12px)",
-            transition: "opacity 0.5s ease",
-          }}
-          aria-hidden
-        />
-      )}
       <div className={styles.uiOverlay}>
         {children}
       </div>
