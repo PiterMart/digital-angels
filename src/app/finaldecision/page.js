@@ -51,12 +51,10 @@ export default function Home() {
     }
   };
 
-  const playVideo = async () => {
+  const playVideo = () => {
     if (!videoRef.current) return;
-    try {
-      await videoRef.current.play();
-      setVideoStarted(true);
-    } catch {}
+    const p = videoRef.current.play();
+    if (p?.then) p.then(() => setVideoStarted(true)).catch(() => {});
   };
 
   return (

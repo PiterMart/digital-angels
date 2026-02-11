@@ -14,10 +14,16 @@ export default function PlaySpriteButton({ onClick }) {
     return () => clearInterval(id);
   }, []);
 
+  const handleTap = (e) => {
+    e.preventDefault();
+    onClick?.();
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleTap}
+      onTouchEnd={handleTap}
       style={{
         position: "fixed",
         top: "50%",

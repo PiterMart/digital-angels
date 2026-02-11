@@ -29,26 +29,24 @@ export default function Home() {
     setTimeout(() => setShowMenu(true), 1000);
   };
 
-  const playVideo = async () => {
-    if (!videoRef.current) return;
-    try {
-      videoRef.current.muted = false;
-      if (videoRef.current.readyState >= 2) {
-        await videoRef.current.play();
-        setVideoStarted(true);
-      } else {
-        videoRef.current.addEventListener('canplay', async () => {
-          try {
-            await videoRef.current.play();
-            setVideoStarted(true);
-          } catch {
-            setTimeout(() => setShowMenu(true), 1000);
-          }
-        }, { once: true });
-        videoRef.current.load();
-      }
-    } catch {
-      setTimeout(() => setShowMenu(true), 1000);
+  const playVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = false;
+    const p = video.play();
+    if (p && typeof p.then === "function") {
+      p.then(() => setVideoStarted(true)).catch(() => {
+        if (video.readyState < 2) {
+          video.load();
+          video.addEventListener("canplay", () => {
+            video.play().then(() => setVideoStarted(true)).catch(() => setTimeout(() => setShowMenu(true), 1000));
+          }, { once: true });
+        } else {
+          setTimeout(() => setShowMenu(true), 1000);
+        }
+      });
+    } else {
+      setVideoStarted(true);
     }
   };
 

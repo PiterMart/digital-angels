@@ -15,12 +15,10 @@ export default function Home() {
   const handleVideoEnd = () => setTimeout(() => setShowMenu(true), 500);
   const handleMenuSelect = (selectedItem) => { window.location.href = selectedItem.href; };
 
-  const playVideo = async () => {
+  const playVideo = () => {
     if (!videoRef.current) return;
-    try {
-      await videoRef.current.play();
-      setVideoStarted(true);
-    } catch {}
+    const p = videoRef.current.play();
+    if (p?.then) p.then(() => setVideoStarted(true)).catch(() => {});
   };
 
   return (
